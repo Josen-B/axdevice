@@ -8,6 +8,9 @@ use axdevice_base::EmulatedDeviceConfig;
 use axdevice_base::{BaseDeviceOps, EmuDeviceType};
 use axerrno::AxResult;
 
+/* Devs */
+use vgic::Vgic;
+
 /// represent A vm own devices
 pub struct AxVmDevices {
     /// emu devices
@@ -29,28 +32,31 @@ impl AxVmDevices {
 
     /// According the emu_configs to init every  specific device
     fn init(this: &mut Self, emu_configs: &Vec<EmulatedDeviceConfig>) {
-        /*
+        
         for config in emu_configs {
-            let dev = match EmuDeviceType::from_usize(config.emu_type) {
+            let dev: Result<Arc<dyn BaseDeviceOps>, ()> = match EmuDeviceType::from_usize(config.emu_type) {
                 // todo call specific initialization function of devcise
-                EmuDeviceType::EmuDeviceTConsole => ,
-                EmuDeviceType::EmuDeviceTGicdV2 => ,
-                EmuDeviceType::EmuDeviceTGPPT => ,
-                EmuDeviceType::EmuDeviceTVirtioBlk => ,
-                EmuDeviceType::EmuDeviceTVirtioNet => ,
-                EmuDeviceType::EmuDeviceTVirtioConsole => ,
-                EmuDeviceType::EmuDeviceTIOMMU => ,
-                EmuDeviceType::EmuDeviceTICCSRE => ,
-                EmuDeviceType::EmuDeviceTSGIR => ,
-                EmuDeviceType::EmuDeviceTGICR => ,
-                EmuDeviceType::EmuDeviceTMeta => ,
+                // EmuDeviceType::EmuDeviceTConsole => ,
+                EmuDeviceType::EmuDeviceTGicdV2 => {
+                    let vgic: Arc<dyn BaseDeviceOps> = Arc::new(Vgic::new());
+                    Ok(vgic)
+                },
+                // EmuDeviceType::EmuDeviceTGPPT => ,
+                // EmuDeviceType::EmuDeviceTVirtioBlk => ,
+                // EmuDeviceType::EmuDeviceTVirtioNet => ,
+                // EmuDeviceType::EmuDeviceTVirtioConsole => ,
+                // EmuDeviceType::EmuDeviceTIOMMU => ,
+                // EmuDeviceType::EmuDeviceTICCSRE => ,
+                // EmuDeviceType::EmuDeviceTSGIR => ,
+                // EmuDeviceType::EmuDeviceTGICR => ,
+                // EmuDeviceType::EmuDeviceTMeta => ,
                 _ => panic!("emu type: {} is still not supported", config.emu_type),
             };
             if let Ok(emu_dev) = dev {
                 this.emu_devices.push(emu_dev)
             }
         }
-        */
+        
     }
 
     /// Find specific device by ipa
